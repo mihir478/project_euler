@@ -19,7 +19,7 @@ namespace P4
         {
             int maxPalin = 0;
             for (int i = 999; i > 100; --i)
-                for (int j = n / i; i * j > maxPalin && j > 100; --j)
+                for (int j = Math.Min(n / i, 999); i * j > maxPalin && j > 100; --j)
                 {
                     int product = i * j;
                     if (product % 11 != 0) continue;
