@@ -6,8 +6,8 @@ namespace P8
     {
         static void Main(String[] args)
         {
-            long t = Convert.ToInt32(Console.ReadLine());
-            for (long a0 = 0; a0 < t; a0++)
+            int t = Convert.ToInt32(Console.ReadLine());
+            for (int a0 = 0; a0 < t; a0++)
             {
                 string[] tokens_n = Console.ReadLine().Split(' ');
                 int n = Convert.ToInt32(tokens_n[0]);
