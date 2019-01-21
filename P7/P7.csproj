@@ -6,8 +6,4 @@
     <StartupObject>P7.Program</StartupObject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Helper\Helper.cs" Link="Helper.cs" />
-  </ItemGroup>
-
 </Project>
