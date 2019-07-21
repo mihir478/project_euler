@@ -5,7 +5,7 @@ namespace P10
 {
     class Program
     {
-        static int l = 1000001;
+        static int l = 2000001;
         static bool[] p = new bool[l];
         static long[] s = new long[l];
 
