@@ -1,12 +1,17 @@
 ﻿using System;
-// using System.Diagnostics;
+using System.Diagnostics;
 
 namespace P14
 {
     class Program
     {
+        static int LIMIT = 10000000;
+        static int[] chains = new int[LIMIT + 1];
+        static long[] results;
+
         static void Main(string[] args)
         {
+
             int t = Convert.ToInt32(Console.ReadLine());
             long[] inputs = new long[t];
             long maxN = 0;
@@ -15,65 +20,57 @@ namespace P14
                 long n = Convert.ToInt64(Console.ReadLine());
                 inputs[a0] = n;
                 if (n > maxN)
-                {
                     maxN = n;
-                }
             }
-            //Stopwatch stopWatch = new Stopwatch();
-            //stopWatch.Start();
 
-            int LIMIT = 200000;
-            int[] chains = new int[LIMIT + 1];
+            // pre-compute
+            results = new long[maxN + 1];
+            FindMaxWithLongestChainUnderN(maxN);
 
+            for (int a0 = 0; a0 < t; a0++) {
+                Console.WriteLine(results[inputs[a0]]);
+            }
+
+            Console.ReadLine();
+        }
+
+        static void FindMaxWithLongestChainUnderN(long n)
+        {
             int maxCL = 0;
-            long nWithMaxCL = 1;
-            long[] outputs = new long[inputs.Length];
-
-            for (long i = 2; i <= maxN; i++)
+            int nWithMaxCL = 1;
+            for (int i = 1; i <= n; ++i)
             {
-                int cL = 0;
-                long n = i;
-                long[] chain = new long[685]; // less than 10 million is 8,400,511, which has 685 steps - Wikipedia
-                do
+                int cL = ChainLength(i);
+                if (cL >= maxCL)
                 {
-                    chain[cL++] = n;
-                    if (n % 2 == 0)
-                        n = n >> 1;
-                    else
-                        n = (n << 1) + n + 1;
-                } while (n > i && n > 1 && (n > LIMIT || chains[n] == 0));
-
-                for (int c = 0; c < cL; ++c) {
-                    if (chain[c] >= i && chain[c] <= LIMIT && chains[chain[c]] == 0)
-                        chains[chain[c]] = chains[n] + cL - c;
-                }
-
-                if (chains[i] >= maxCL)
-                {
-                    maxCL = chains[i];
+                    maxCL = cL;
                     nWithMaxCL = i;
                 }
-                
-                for (int s = 0; s < inputs.Length; ++s) {
-                    if (inputs[s] == i) {
-                        outputs[s] = nWithMaxCL;
-                    }
-                }
+            results[i] = nWithMaxCL;
             }
+        }
 
-            for (int o = 0; o < outputs.Length; ++o)
+        static int ChainLength(long n)
+        {
+            // memoize
+            if (n == 1)
+                return 0;
+
+            if (n <= LIMIT && chains[n] > 0)
+                return chains[n];
+
+            int cL = 0;
+            if (n % 2 == 0)
+                cL = 1 + ChainLength(n / 2);
+            else
+                cL = 1 + ChainLength(3 * n + 1);
+
+            if (n <= LIMIT)
             {
-                Console.WriteLine(outputs[o]);
+                chains[n] = cL;
             }
 
-            //stopWatch.Stop();
-            //// Get the elapsed time as a TimeSpan value.
-            //TimeSpan ts = stopWatch.Elapsed;
-
-            //// Format and display the TimeSpan value.
-            //string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
-            //Console.WriteLine("RunTime " + elapsedTime);
-            Console.Read();
+            return cL;
         }
     }
 }
